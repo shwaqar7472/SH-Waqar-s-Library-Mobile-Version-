@@ -1,0 +1,519 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="SH Waqar's Library">
+    <title>SH Waqar's Library - Personal Book Management App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <svg class="logo-svg" viewBox="0 0 100 100" width="40" height="40">
+                    <!-- Book icon with bookmark -->
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#d4af37;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Book pages -->
+                    <path d="M 30 20 L 30 80 L 50 90 L 70 80 L 70 20 Z" fill="#1e3a8a" stroke="#d4af37" stroke-width="2"/>
+                    <path d="M 50 25 L 50 85" stroke="#d4af37" stroke-width="2"/>
+                    <path d="M 40 30 L 60 30" stroke="#d4af37" stroke-width="1.5" opacity="0.7"/>
+                    <path d="M 40 40 L 60 40" stroke="#d4af37" stroke-width="1.5" opacity="0.7"/>
+                    <path d="M 40 50 L 60 50" stroke="#d4af37" stroke-width="1.5" opacity="0.7"/>
+                    <!-- Bookmark ribbon -->
+                    <rect x="65" y="15" width="8" height="35" fill="#d4af37" rx="2"/>
+                    <!-- SWL Initials -->
+                    <text x="50" y="95" font-size="10" font-weight="bold" fill="#d4af37" text-anchor="middle">SWL</text>
+                </svg>
+                <span class="app-name">SH Waqar's Library</span>
+            </div>
+            
+            <div class="nav-menu" id="navMenu">
+                <a href="#" class="nav-link active" data-page="dashboard">Home</a>
+                <a href="#" class="nav-link" data-page="library">My Library</a>
+                <a href="#" class="nav-link" data-page="add-book">Add Book</a>
+                <a href="#" class="nav-link" data-page="favorites">Favorites</a>
+                <a href="#" class="nav-link" data-page="stats">Stats</a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Dashboard Page -->
+        <section id="dashboard" class="page active">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h1>Welcome to Your Library</h1>
+                    <p>Manage your book collection with elegance and ease</p>
+                    <button class="btn btn-primary" onclick="goToPage('add-book')">Add Your First Book</button>
+                </div>
+                <div class="hero-icon">📚</div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📖</div>
+                    <div class="stat-content">
+                        <h3>Total Books</h3>
+                        <p class="stat-number" id="totalBooksCount">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-content">
+                        <h3>Books Read</h3>
+                        <p class="stat-number" id="readBooksCount">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-content">
+                        <h3>Unread Books</h3>
+                        <p class="stat-number" id="unreadBooksCount">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-content">
+                        <h3>Favorites</h3>
+                        <p class="stat-number" id="favoriteBooksCount">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔄</div>
+                    <div class="stat-content">
+                        <h3>Currently Reading</h3>
+                        <p class="stat-number" id="readingBooksCount">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏰</div>
+                    <div class="stat-content">
+                        <h3>Avg Rating</h3>
+                        <p class="stat-number" id="avgRatingCount">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recently Added Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>Recently Added Books</h2>
+                    <a href="#" class="view-all-link" onclick="goToPage('library')">View All</a>
+                </div>
+                <div id="recentBooksContainer" class="books-grid">
+                    <div class="empty-state">
+                        <p>No books added yet. Start by adding your first book!</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- Library Page -->
+        <section id="library" class="page">
+            <div class="section-header">
+                <h2>My Library</h2>
+                <div class="lib-controls">
+                    <input type="text" id="searchInput" class="search-box" placeholder="Search by title, author, or genre...">
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="grid" title="Grid View">⊞</button>
+                        <button class="view-btn" data-view="list" title="List View">☰</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters and Sort -->
+            <div class="filters-section">
+                <div class="filter-group">
+                    <label for="genreFilter">Genre:</label>
+                    <select id="genreFilter" class="filter-select">
+                        <option value="">All Genres</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="statusFilter">Status:</label>
+                    <select id="statusFilter" class="filter-select">
+                        <option value="">All Status</option>
+                        <option value="Read">Read</option>
+                        <option value="Unread">Unread</option>
+                        <option value="Currently Reading">Currently Reading</option>
+                        <option value="Want to Read">Want to Read</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="ratingFilter">Rating:</label>
+                    <select id="ratingFilter" class="filter-select">
+                        <option value="">All Ratings</option>
+                        <option value="5">5 Stars</option>
+                        <option value="4">4+ Stars</option>
+                        <option value="3">3+ Stars</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="sortBy">Sort By:</label>
+                    <select id="sortBy" class="filter-select">
+                        <option value="recent">Recently Added</option>
+                        <option value="title-asc">Title (A-Z)</option>
+                        <option value="title-desc">Title (Z-A)</option>
+                        <option value="author">Author</option>
+                        <option value="rating">Rating</option>
+                        <option value="year">Publish Year</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Books Display -->
+            <div id="booksContainer" class="books-grid">
+                <div class="empty-state">
+                    <p>No books in your library yet. <a href="#" onclick="goToPage('add-book')">Add one now!</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add Book Page -->
+        <section id="add-book" class="page">
+            <div class="form-container">
+                <h2>Add a New Book</h2>
+                <form id="addBookForm" class="book-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookTitle">Book Title *</label>
+                            <input type="text" id="bookTitle" required placeholder="Enter book title" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="bookAuthor">Author Name *</label>
+                            <input type="text" id="bookAuthor" required placeholder="Enter author name" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookGenre">Category/Genre *</label>
+                            <input type="text" id="bookGenre" required placeholder="e.g., Fiction, Mystery, Science Fiction" autocomplete="off" list="genreList">
+                            <datalist id="genreList">
+                                <option value="Fiction">
+                                <option value="Non-Fiction">
+                                <option value="Mystery">
+                                <option value="Romance">
+                                <option value="Science Fiction">
+                                <option value="Fantasy">
+                                <option value="Biography">
+                                <option value="History">
+                                <option value="Self-Help">
+                                <option value="Poetry">
+                            </datalist>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookISBN">ISBN</label>
+                            <input type="text" id="bookISBN" placeholder="978-0-123456-78-9" pattern="[0-9\-]{10,17}" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookYear">Publish Year</label>
+                            <input type="number" id="bookYear" placeholder="2024" min="1000" max="2100" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="bookPages">Number of Pages</label>
+                            <input type="number" id="bookPages" placeholder="300" min="1" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookLanguage">Language</label>
+                            <select id="bookLanguage" autocomplete="off">
+                                <option value="English">English</option>
+                                <option value="Spanish">Spanish</option>
+                                <option value="French">French</option>
+                                <option value="German">German</option>
+                                <option value="Italian">Italian</option>
+                                <option value="Portuguese">Portuguese</option>
+                                <option value="Chinese">Chinese</option>
+                                <option value="Japanese">Japanese</option>
+                                <option value="Korean">Korean</option>
+                                <option value="Arabic">Arabic</option>
+                                <option value="Hindi">Hindi</option>
+                                <option value="Russian">Russian</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookStatus">Reading Status *</label>
+                            <select id="bookStatus" required>
+                                <option value="Unread">Unread</option>
+                                <option value="Read">Read</option>
+                                <option value="Currently Reading">Currently Reading</option>
+                                <option value="Want to Read">Want to Read</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookRating">Rating (1-5 stars)</label>
+                            <div class="rating-input">
+                                <input type="number" id="bookRating" min="0" max="5" step="0.5" placeholder="4.5">
+                                <span class="rating-display" id="ratingDisplay">☆☆☆☆☆</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookCover">Book Cover Image URL</label>
+                            <input type="url" id="bookCover" placeholder="https://example.com/cover.jpg" autocomplete="off">
+                            <button type="button" class="btn btn-secondary small" id="fetchBookDataBtn">🔍 Fetch Cover & Description</button>
+                        </div>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="bookNotes">Notes/Description</label>
+                            <textarea id="bookNotes" placeholder="Add notes or a brief description..." rows="3" autocomplete="off"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Add Book</button>
+                        <button type="reset" class="btn btn-secondary">Clear</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Favorites Page -->
+        <section id="favorites" class="page">
+            <div class="section-header">
+                <h2>My Favorite Books</h2>
+            </div>
+            <div id="favoritesContainer" class="books-grid">
+                <div class="empty-state">
+                    <p>No favorite books yet. Mark some books as favorites in your library!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics Page -->
+        <section id="stats" class="page">
+            <div class="section-header">
+                <h2>Library Statistics</h2>
+            </div>
+            
+            <div class="stats-detailed">
+                <div class="stat-card-large">
+                    <h3>Quick Stats</h3>
+                    <div class="stat-list">
+                        <div class="stat-item">
+                            <span>Total Books:</span>
+                            <strong id="statTotalBooks">0</strong>
+                        </div>
+                        <div class="stat-item">
+                            <span>Books Read:</span>
+                            <strong id="statBooksRead">0</strong>
+                        </div>
+                        <div class="stat-item">
+                            <span>Unread Books:</span>
+                            <strong id="statBooksUnread">0</strong>
+                        </div>
+                        <div class="stat-item">
+                            <span>Currently Reading:</span>
+                            <strong id="statCurrentlyReading">0</strong>
+                        </div>
+                        <div class="stat-item">
+                            <span>Favorite Books:</span>
+                            <strong id="statFavorites">0</strong>
+                        </div>
+                        <div class="stat-item">
+                            <span>Average Rating:</span>
+                            <strong id="statAvgRating">0/5</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card-large">
+                    <h3>Books by Genre</h3>
+                    <div class="genre-list" id="genreStats">
+                        <p class="empty-message">Add books to see genre distribution</p>
+                    </div>
+                </div>
+
+                <div class="stat-card-large">
+                    <h3>Reading Progress</h3>
+                    <div class="progress-container">
+                        <div class="progress-item">
+                            <span>Books Read</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressRead"></div>
+                            </div>
+                            <span id="progressReadText">0%</span>
+                        </div>
+                        <div class="progress-item">
+                            <span>Unread</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill unread" id="progressUnread"></div>
+                            </div>
+                            <span id="progressUnreadText">0%</span>
+                        </div>
+                        <div class="progress-item">
+                            <span>Currently Reading</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill reading" id="progressReading"></div>
+                            </div>
+                            <span id="progressReadingText">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card-large">
+                    <h3>Top Genres</h3>
+                    <div id="topGenres" class="top-genres">
+                        <p class="empty-message">Add books to see top genres</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Management -->
+            <div class="data-management">
+                <h3>Library Data Management</h3>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" id="backupBtn">💾 Backup Library (JSON)</button>
+                    <button class="btn btn-secondary" id="restoreBtn">♻️ Restore Library (JSON)</button>
+                    <input type="file" id="restoreFile" accept=".json" style="display:none">
+                    <button class="btn btn-secondary" id="exportBtn">📥 Export Library (JSON)</button>
+                    <button class="btn btn-secondary" id="exportPdfBtn">📄 Export to PDF</button>
+                    <button class="btn btn-danger" id="resetBtn">🔄 Reset Library</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Book Details Modal -->
+    <div id="bookModal" class="modal">
+        <div class="modal-content book-details-modal">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <div class="modal-body" id="modalBody">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Book Modal -->
+    <div id="editBookModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeEditModal()">&times;</span>
+            <h2>Edit Book</h2>
+            <form id="editBookForm" class="book-form">
+                <input type="hidden" id="editBookId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editBookTitle">Book Title *</label>
+                        <input type="text" id="editBookTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editBookAuthor">Author Name *</label>
+                        <input type="text" id="editBookAuthor" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editBookGenre">Category/Genre *</label>
+                        <input type="text" id="editBookGenre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editBookISBN">ISBN</label>
+                        <input type="text" id="editBookISBN">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editBookYear">Publish Year</label>
+                        <input type="number" id="editBookYear" min="1000" max="2100">
+                    </div>
+                    <div class="form-group">
+                        <label for="editBookPages">Number of Pages</label>
+                        <input type="number" id="editBookPages" min="1">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editBookLanguage">Language</label>
+                        <input type="text" id="editBookLanguage">
+                    </div>
+                    <div class="form-group">
+                        <label for="editBookStatus">Reading Status *</label>
+                        <select id="editBookStatus" required>
+                            <option value="Unread">Unread</option>
+                            <option value="Read">Read</option>
+                            <option value="Currently Reading">Currently Reading</option>
+                            <option value="Want to Read">Want to Read</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editBookRating">Rating (1-5 stars)</label>
+                        <input type="number" id="editBookRating" min="0" max="5" step="0.5">
+                    </div>
+                    <div class="form-group">
+                        <label for="editBookCover">Book Cover Image URL</label>
+                        <input type="url" id="editBookCover" autocomplete="off">
+                        <button type="button" class="btn btn-secondary small" id="fetchEditBookDataBtn">🔍 Fetch Cover & Description</button>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="editBookNotes">Notes/Description</label>
+                        <textarea id="editBookNotes" rows="3" autocomplete="off"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Book</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content delete-modal">
+            <h2>Delete Book?</h2>
+            <p>Are you sure you want to delete "<span id="deleteBookTitle"></span>"? This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification">
+        <span id="notificationMessage"></span>
+        <button class="notification-close" onclick="closeNotification()">×</button>
+    </div>
+
+    <!-- PDF export library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
